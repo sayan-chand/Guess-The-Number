@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Guess The Number Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(356deg, #7a3c58, #c278df);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+            margin-top: 100px;
+        }
+
+        .card-title {
+            color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            margin-left: 10px;
+        }
+
+        .btn-primary:hover, .btn-danger:hover {
+            background-color: #ffffff;
+            color: #007bff;
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+        }
+        
+        .count {
+            padding: 10px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: center;
+            margin-top: 10px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .count:hover {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .card {
+                margin-top: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Enter A Value Between 1 to 100</h1>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Enter Your Guess</h3>
+                        <input type="number" id="guess" class="form-control">
+                        <div class="text-center">
+                            <button type="button" id="check" class="btn btn-primary mt-3">Check</button>
+                            <button type="button" id="reset" class="btn btn-danger mt-3">Reset</button>
+                        </div>
+                        <div id="result"></div>
+                    </div>
+                    <div class="count mb-3" id="count">Guess count: 0</div>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+    <script>
+        // Generate Random Number
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+        // Get HTML Elements
+        const guessInput = document.getElementById("guess");
+        const checkButton = document.getElementById("check");
+        const resetButton = document.getElementById("reset");
+        const resultDiv = document.getElementById("result");
+        const countDiv = document.getElementById("count");
+
+        // Initialize Guess Count
+        let guessCount = 0;
+
+        // Add Event Listener to Check Button
+        checkButton.addEventListener("click", function() {
+            // Get User Guess
+            const userGuess = parseInt(guessInput.value);
+
+            // Increment Guess Count
+            guessCount++;
+
+            // Update Guess Count Display
+            countDiv.innerHTML = `Guess count: ${guessCount}`; // Corrected template literal syntax
+
+            // Check User Guess
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                resultDiv.innerHTML = "Please enter a valid number between 1 and 100.";
+                resultDiv.style.backgroundColor = "#ffc107";
+            } else if (userGuess === randomNumber) {
+                resultDiv.innerHTML = "Congratulations! You guessed the correct number.";
+                resultDiv.style.backgroundColor = "#28a745";
+                guessInput.disabled = true;
+                checkButton.disabled = true;
+            } else {
+                let resultText = "Your guess is ";
+                resultText += (userGuess < randomNumber) ? "too low." : "too high.";
+                resultDiv.innerHTML = resultText;
+                resultDiv.style.backgroundColor = "#dc3545";
+            }
+        });
+
+        // Add Event Listener to Reset Button
+        resetButton.addEventListener("click", function() {
+            // Reset Game
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            guessInput.value = "";
+            guessInput.disabled = false;
+            checkButton.disabled = false;
+            resultDiv.innerHTML = "";
+            resultDiv.style.backgroundColor = "";
+            guessCount = 0;
+            countDiv.innerHTML = `Guess count: ${guessCount}`; // Corrected template literal syntax
+        });
+
+        // Add Event Listener to Guess Input
+        guessInput.addEventListener("keydown", function(event) {
+            // Press Enter to Check Guess
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkButton.click();
+            }
+        });
+    </script>
+</body>
+</html>
